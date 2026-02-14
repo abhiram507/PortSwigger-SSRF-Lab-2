@@ -2,6 +2,7 @@
 
 
 
+
 **Report ID:** PS-LAB-SSRF-002  
 
 **Author:** Abhi (Abhiram)  
@@ -139,7 +140,7 @@ Figure 2: Successful deletion of user 'carlos'.
 
 
 
-![Lab Solved Congratulations](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/b88c5028a525baa1878ec630af937397fd31fba2/PortSwigger%20SSRF%20Lab%202%20Lab%20Completion.png)
+![Lab Solved Congratulations](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/61c2ea540c2716f0f745d822f8dcfc2ca655de8b/PortSwigger%20SSRF%20Lab%202%20Lab%20Completion.png)
 
 Figure 3: PortSwigger Academy confirmation – "Congratulations, you solved the lab!"
 
