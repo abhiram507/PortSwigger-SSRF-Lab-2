@@ -1,10 +1,16 @@
 # PortSwigger Web Security Academy Lab Report: Basic SSRF Against Another Back-End System
 
+
+
+
 **Report ID:** PS-LAB-SSRF-002  
 **Author:** Abhi (Abhiram)  
 **Date:** February 13, 2026  
 **Lab Level:** Apprentice  
 **Lab Title:** Basic SSRF against another back-end system
+
+
+
 
 ## Executive Summary
 
@@ -19,6 +25,7 @@ A Server-Side Request Forgery vulnerability exists in the stock check functional
 Unauthorized access to internal networks, admin panels, or other back-end services not exposed publicly. In production, this could lead to data exfiltration, configuration leaks, or chained attacks (e.g., metadata theft).
 
 **Status:** Exploited in controlled lab environment only; no real-world impact. Educational purposes.
+
 
 ## Environment and Tools Used
 
@@ -94,7 +101,12 @@ Response:
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
 
-User deleted successfully!
+<!DOCTYPE html>
+<!-- Lab header: "SOLVED" status -->
+<p>User deleted successfully!</p>
+<h1>Users</h1>
+<div>wiener - <a href="/admin/delete?username=wiener">Delete</a></div>
+<!-- Carlos account removed
 
 
 
