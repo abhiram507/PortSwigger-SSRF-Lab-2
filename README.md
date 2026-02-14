@@ -120,7 +120,7 @@ Figure 1: Burp Intruder scan showing status 200 on valid IP (admin interface fou
 
 
 
-![Proof of Successful SSRF Exploitation]()
+![Proof of Successful SSRF Exploitation](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/4303c7fda60fe8b62ab673d5290f01673d1b1248/PortSwigger%20SSRF%20Lab%202%20success.png)
 
 Figure 2: Successful deletion of user 'carlos'.
 
