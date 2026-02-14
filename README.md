@@ -11,7 +11,7 @@
 
 
 
-## Executive Summary
+## Executive Summary:
 
 **Vulnerability Type:** Server-Side Request Forgery (SSRF) – Basic / Internal Network Access  
 
@@ -28,7 +28,7 @@ Unauthorized access to internal networks, admin panels, or other back-end servic
 
 
 
-## Environment and Tools Used
+## Environment and Tools Used:
 
 - **Target:** Simulated e-commerce site from PortSwigger Web Security Academy (`https://*.web-security-academy.net`)
 - **Browser:** Google Chrome (Version 120.0 or similar)
@@ -39,7 +39,7 @@ Unauthorized access to internal networks, admin panels, or other back-end servic
 
 
 
-## Methodology
+## Methodology:
 
 Conducted following ethical hacking best practices in a simulated environment.
 
@@ -57,7 +57,7 @@ Conducted following ethical hacking best practices in a simulated environment.
 
 
 
-## Detailed Findings
+## Detailed Findings:
 
 **Vulnerable Endpoint:** `POST /product/stock` (stock check)
 
@@ -111,7 +111,7 @@ User deleted successfully!
 
 
 
-Proof of Exploitation
+Proof of Exploitation:
 
 
 ![Proof of SSRF Error]()
@@ -179,4 +179,3 @@ References:
 
 PortSwigger Academy: Basic SSRF against another back-end system
 OWASP: Server-Side Request Forgery (SSRF)
-
