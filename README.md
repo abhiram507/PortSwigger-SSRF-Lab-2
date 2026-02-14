@@ -110,12 +110,6 @@ stockApi=http://192.168.0.64:8080/admin/delete?username=carlos
 
 Response:
 
-HTTP/2 302 Found
-Location: http://192.168.0.64:8080/admin
-X-Frame-Options: SAMEORIGIN
-Content-Length: 0
-
-
 HTTP/2 200 OK
 Content-Type: text/html; charset=utf-8
 
@@ -125,7 +119,6 @@ Content-Type: text/html; charset=utf-8
 <h1>Users</h1>
 <div>wiener - <a href="/admin/delete?username=wiener">Delete</a></div>
 <!-- Carlos account removed 
-
 
 
 
@@ -148,11 +141,9 @@ Figure 3: PortSwigger Academy confirmation – "Congratulations, you solved the 
 
 
 
-
 Exploitation Explanation:
 
 The application trusts the stockApi URL and fetches it server-side, returning the response. No IP filtering prevents access to internal RFC 1918 ranges (192.168.0.0/16). Intruder brute-forced the last octet (1–255) on port 8080 to find the admin service. Once located, direct request to /admin/delete?username=carlos performed the action.
-
 
 
 
@@ -161,7 +152,6 @@ Risk Assessment:
 Likelihood: High (user-controlled URL, no validation).
 Impact: High to Critical — internal network scanning, unauthorized access, potential exfiltration or escalation.
 Affected Components: Stock check backend fetch logic.
-
 
 
 
@@ -176,7 +166,6 @@ Regular scanning (Burp Scanner, ZAP) and code reviews.
 
 
 
-
 Conclusion and Lessons Learned:
 
 This lab showed basic SSRF against internal back-end systems: scan private IP ranges via Intruder, access hidden admin, perform actions.
@@ -187,7 +176,6 @@ SSRF often in "fetch from URL" features (stock checks, imports, webhooks).
 Test private IPs (192.168.0.1–255, 10.0.0.1, etc.) and ports (8080 common).
 Intruder excels for IP brute-forcing in SSRF.
 Strengthened skills in SSRF detection, scanning, and exploitation.
-
 
 
 
