@@ -68,7 +68,8 @@ Conducted following ethical hacking best practices in a simulated environment.
 
 ## Detailed Findings:
 
-**Vulnerable Endpoint:** `POST /product/stock` (stock check)
+**Vulnerable Endpoint:** 
+`POST /product/stock` (stock check)
 
 **Original Request (Captured in Burp):**
 
