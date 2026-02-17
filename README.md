@@ -113,7 +113,7 @@ Content-Type: text/html; charset=utf-8
 Proof of Exploitation
 
 
-![Proof of SSRF Error]()
+![Proof of SSRF Error](https://github.com/abhiram507/PortSwigger-SSRF-Lab-2/blob/6abe1dcd2abefe867f11a2179096a1ce7caafc08/PortSwigger-SSRF-Lab-2%20Error.png)
 
 Figure 1: Burp Intruder scan showing status 200 on valid IP (admin interface found).
 
